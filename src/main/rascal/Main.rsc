@@ -24,7 +24,7 @@ void runAnalysisOn(loc project, str projectName) {
     astCloneAnalysis(project);
     logDashedLine();
 
-    metricsCloneAnalysis(project);
+    metricsCloneAnalysis(project, true);
     logDashedLine();
 
     interval runtime = createInterval(startTime, now());
@@ -35,8 +35,8 @@ void runAnalysisOn(loc project, str projectName) {
 void main() {
     logDashedLine();
     // runAnalysisOn(SMALLSQL_CWD, "SmallSQL Project");
-    // runAnalysisOn(HSQLDB_CWD, "HSQLDB Project");
-    runAnalysisOn(SIMPLE_PROJECT_CWD, "Simple Java Project");
+    runAnalysisOn(HSQLDB_CWD, "HSQLDB Project");
+    // runAnalysisOn(SIMPLE_PROJECT_CWD, "Simple Java Project");
 }
 
 // PRIVATE METHODS
@@ -51,11 +51,11 @@ private void astCloneAnalysis(project) {
     log("Lines of Code (Functional): <functional>");
 }
 
-private void metricsCloneAnalysis(project) {
+private void metricsCloneAnalysis(project, bool bBigOnly) {
     log("Metrics Clone Analysis");
     logDashedLine();
 
-    rel[loc, loc] aClones = analyze(project);
+    rel[loc, loc] aClones = analyze(project, bBigOnly);
     for(tuple[loc, loc] pair <- aClones){
         log("Clone pair:");
         if(<l1, l2> := pair){
