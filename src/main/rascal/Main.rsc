@@ -14,6 +14,7 @@ import utils::Logger;
 import metrics::Volume;
 
 import Constants;
+import DetectCloneMetrics;
 
 void runAnalysisOn(loc project, str projectName) {
     log("Running analysis on: <projectName>");
@@ -21,6 +22,9 @@ void runAnalysisOn(loc project, str projectName) {
     logDashedLine();
 
     astCloneAnalysis(project);
+    logDashedLine();
+
+    metricsCloneAnalysis(project);
     logDashedLine();
 
     interval runtime = createInterval(startTime, now());
@@ -45,4 +49,18 @@ private void astCloneAnalysis(project) {
 
     int functional = countFunctionalLinesProject(project);
     log("Lines of Code (Functional): <functional>");
+}
+
+private void metricsCloneAnalysis(project) {
+    log("Metrics Clone Analysis");
+    logDashedLine();
+
+    rel[loc, loc] aClones = analyze(project);
+    for(tuple[loc, loc] pair <- aClones){
+        log("Clone pair:");
+        if(<l1, l2> := pair){
+            log(l1);
+            log(l2);
+        }
+    }
 }
