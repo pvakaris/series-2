@@ -1,8 +1,9 @@
 package org.example;
 
 public class Calculator {
-    public static int add(int a, int b) {
-        return a + b;
+    public Long add(Long a, Long b) {
+        Long result = a + b;
+        return result;
                 /*
             Comment
         Comment
@@ -11,8 +12,27 @@ public class Calculator {
          */
     }
 
-    public static int addReverse(int a, int b) {
-        return b + a;
-        // Another comment
+    public Long subtract(Long a, Long b) {
+        System.out.println(a);
+
+        for(Long k = 0; k <= 5; k++) {
+            System.out.println(k);
+        }
+        return  a - b;
+    }
+
+    public Long subtractCopy(Long a, Long b) {
+
+        System.out.println(b);
+
+        for(Long i = 0; i <= 5; i++) {
+            System.out.println(i);
+        }
+        return  a - b;
+    }
+
+    public Long addReverse(Long a, Long b) {
+        Long result = a + b;
+        return result;
     }
 }

@@ -12,3 +12,7 @@ public loc SIMPLE_PROJECT = |project://SimpleJavaProject|;
 
 // MATH Constants
 public real ROUNDING_DIGITS = 0.01;
+
+// AST Clone detection constants
+public int AST_SIZE = 30;
+public real SIMILARITY_THRESHOLD = 0.9;

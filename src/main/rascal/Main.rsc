@@ -8,6 +8,7 @@ import lang::java::m3::Core;
 import lang::java::m3::AST;
 
 import utils::Helpers;
+import utils::MapHelpers;
 import utils::Calculator;
 import utils::Logger;
 
@@ -15,6 +16,9 @@ import metrics::Volume;
 
 import Constants;
 import DetectCloneMetrics;
+
+import ast::AstHelpers;
+import ast::AstAlgorithm;
 
 void runAnalysisOn(loc project, str projectName) {
     log("Running analysis on: <projectName>");
@@ -34,9 +38,9 @@ void runAnalysisOn(loc project, str projectName) {
 
 void main() {
     logDashedLine();
-    // runAnalysisOn(SMALLSQL_CWD, "SmallSQL Project");
+    runAnalysisOn(SMALLSQL_CWD, "SmallSQL Project");
     // runAnalysisOn(HSQLDB_CWD, "HSQLDB Project");
-    runAnalysisOn(SIMPLE_PROJECT_CWD, "Simple Java Project");
+    // runAnalysisOn(SIMPLE_PROJECT_CWD, "Simple Java Project");
 }
 
 // PRIVATE METHODS
@@ -49,6 +53,20 @@ private void astCloneAnalysis(project) {
 
     int functional = countFunctionalLinesProject(project);
     log("Lines of Code (Functional): <functional>");
+
+    list[Declaration] asts = getASTs(project);
+
+    // Type 1
+    // map[value, set[loc]] mapOne = typeOne(asts);
+    // logCloneMap("TYPE 1 CLONES", functional, sumMap(mapOne), sumMapDeep(mapOne));
+
+    // Type 2
+    // map[value, set[loc]] mapTwo = typeTwo(asts);
+    // logCloneMap("TYPE 2 CLONES", functional, sumMap(mapTwo), sumMapDeep(mapTwo));
+
+    // Type 3
+    // map[value, set[loc]] mapThree = typeThree(asts);
+    // logCloneMap("TYPE 3 CLONES", functional, sumMap(mapThree), sumMapDeep(mapThree));
 }
 
 private void metricsCloneAnalysis(project) {
