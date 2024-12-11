@@ -13,19 +13,20 @@ public class Calculator {
     }
 
     public Long addReverse(Long a, Long b) {
-        Long result = b + a;
+        Long result = b + a; // Comment after the code on the same line
         return result;
     }
 
-    public Long subtract(Long a, Long b) {
-        for(Long k = 0; k <= 5; k++) {
+    public Long subtractFiveTimes(Long a, Long b) {
+        for(int k = 0; k <= 5; k++) {
             a = a - b;
         }
         return a;
     }
 
-    public Long subtractCopy(Long a, Long b) {
-        for(Long i = 0; i <= 5; i++) {
+    public Long subtractFiveTimesCopy(Long a, Long b) {
+        // Comment single line
+        for(int i = 0; i <= 5; i++) {
             a -= b;
         }
         return  a;

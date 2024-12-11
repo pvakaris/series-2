@@ -1,20 +1,24 @@
+package org.example;
+
+/*
+    Simple Java class containing simple code clones of type I, II and III
+ */
 public class Printer {
-    
 
     public void printTypeOneA() {
-        String word = new String("Hello");
+        String word = "Hello";
         System.out.println(word);
     }
 
     public void printTypeOneB() {
-        String word = new String("Hello");
+        String word = "Hello";
         System.out.println(word);
 
     }
 
     public void printTypeTwo() {
-        var first = new String("world");
-        var second = new String("world");
+        var first = "world";
+        var second = "world";
         System.out.println(first);
         System.out.println(second);
     }
