@@ -3,6 +3,7 @@ module utils::Logger
 import IO;
 import String;
 import DateTime;
+import utils::Calculator;
 
 void log(str message) {
     println(message);
@@ -46,4 +47,26 @@ void logDuration(str title, Duration dur) {
     }
     
     log("<title> <trim(result)>");
+}
+
+void logCloneMap(map[value, set[loc]] cloneMap){
+    for (key <- cloneMap) {
+        for (location <- cloneMap[key]) {
+            log(location);
+        }
+        logDashedLine();
+    }
+}
+
+void logCloneMap(str cloneType, int functionalLines, int numberOfClones, tuple[int, int] cloneCounts) {
+    int numberOfCloneClasses = cloneCounts[0];
+    int numberOfClonedLines = cloneCounts[1];
+    
+    logDashedLine();
+    log(cloneType);
+    logDashedLine();
+    log("Clones: <numberOfClones>");
+    log("Clone classes: <numberOfCloneClasses>");
+    log("Cloned lines: <numberOfClonedLines>");
+    log("Cloned lines percentage (of functional): <percent(numberOfClonedLines, functionalLines)>%");
 }

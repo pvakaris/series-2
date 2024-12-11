@@ -1,12 +1,11 @@
-module ast::ASTHelpers
+module ast::AstHelpers
 
-import IO;
-import lang::java::m3::AST;
 import Node;
-import Map;
-import List;
 import Set;
-import Type;
+
+import lang::java::m3::Core;
+
+import metrics::Volume;
 
 
 /*
@@ -20,11 +19,17 @@ import Type;
         R = number of different nodes in sub-tree 2
 */
 
-real calculateSimilarity(list[str] subtree1, list[str] subtree2) {
-    list[str] sharedNodes = subtree1 & subtree2;
+real calculateSimilarity(set[node] subtree1, set[node] subtree2) {
+    set[node] sharedNodes = subtree1 & subtree2;
     int s = size(sharedNodes);
     int l = size(subtree1 - sharedNodes);
     int r = size(subtree2 - sharedNodes);
+
+     if (s == 0 && (l + r) == 0) {
+        return 100.0;
+    } else if ((2 * s + l + r) == 0) {
+        return 0.0;
+    }
 
     return (2.0 * s / (2.0 * s + l + r)) * 100.0;
 }
