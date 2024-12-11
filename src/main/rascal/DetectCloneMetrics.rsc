@@ -31,6 +31,133 @@ metric sumMetrics(metric m1, metric m2){
         return metric(-1, -1, -1, -1);
 }
 
-rel[loc, loc] analyze(loc project){
-    return {<|tmp://myTempDirectory|, |tmp://myTempDirectory|>};
+bool bigMetric(metric m){
+    if(metric(_, _, nDecl, nSt) := m)
+        return (nSt+nDecl)>10;
+    else
+        return false;
+}
+
+metric calcClass(Declaration inp){
+    list[str] aFuncCalled = [];
+    list[loc] aDecl = [];
+    list[loc] aEx = [];
+    int nDecl = 0;
+    int nStEx = 0;
+    if(\class(_, _, _, _, _, list[Declaration] body) := inp || \class(list[Declaration] body) := inp)
+    {
+        visit(body){
+            case \methodCall(_, name, _): {
+                if(\id(st) := name)
+                    aFuncCalled += st;
+            }
+            case \methodCall(_, _, name, _):{
+                if(\id(st) := name)
+                    aFuncCalled += st;
+            }
+            case \superMethodCall(_, name, _):{
+                if(\id(st) := name)
+                    aFuncCalled += st;
+            }
+            case \superMethodCall(_, _, name, _):{
+                if(\id(st) := name)
+                    aFuncCalled += st;
+            }
+            //DECLARATION
+            case inst:\enum(_, _, _, _, _): aDecl += inst.src;
+            case inst:\enumConstant(_, _, _, _): aDecl += inst.src;
+            case inst:\enumConstant(_, _, _): aDecl += inst.src;
+            case inst:\field(_, _, _): aDecl += inst.src;
+            case inst:\method(_, _, _, _, _, _, _): aDecl += inst.src;
+            case inst:\method(_, _, _, _, _, _): aDecl += inst.src;
+            case inst:\constructor(_, _, _, _, _): aDecl += inst.src;
+            case inst:\variables(_, _, _): aDecl += inst.src;
+            //case inst:\variable(_, _): aDecl += inst.src;
+            //case inst:\variable(_, _, _): aDecl += inst.src;
+            //case inst:\typeParameter(_, _): aDecl += inst.src;
+            case inst:\parameter(_, _, _, _): aDecl += inst.src;
+            // EXPRESSION
+            case inst:\newArray(_, _, _): aEx += inst.src;
+            case inst:\newArray(_, _): aEx += inst.src;
+            case inst:\assignment(_, _, _): aEx += inst.src;
+            case inst:\cast(_, _): aEx += inst.src;
+            case inst:\newObject(_, _, _, _, _): aEx += inst.src;
+            case inst:\newObject(_, _, _, _): aEx += inst.src;
+            case inst:\newObject(_, _, _): aEx += inst.src;
+            case inst:\postIncrement(_): aEx += inst.src;
+            case inst:\postDecrement(_): aEx += inst.src;
+            case inst:\preIncrement(_): aEx += inst.src;
+            case inst:\preDecrement(_): aEx += inst.src;
+            case inst:\prePlus(_): aEx += inst.src;
+            case inst:\preMinus(_): aEx += inst.src;
+            case inst:\preComplement(_): aEx += inst.src;
+            case inst:\lambda(_, _): aDecl += inst.src;
+            // Statement
+            case inst:\assert(_): aEx += inst.src;
+            case inst:\assert(_, _): aEx += inst.src;
+            case inst:\break(): aEx += inst.src;
+            case inst:\break(_): aEx += inst.src;
+            case inst:\continue(): aEx += inst.src;
+            case inst:\continue(_): aEx += inst.src;
+            case inst:\do(_, _): aEx += inst.src;
+            case inst:\return(_): {aEx += inst.src;}
+            case inst:\return(): aEx += inst.src;
+            case inst:\synchronizedStatement(_, _): aEx += inst.src;
+            case inst:\throw(_): aEx += inst.src;
+            case inst:\try(_, _): aEx += inst.src;
+            case inst:\try(_, _, _): aEx += inst.src;
+            case inst:\catch(_, _): aEx += inst.src;
+            case inst:\expressionStatement(_): aEx += inst.src;
+        }
+    }
+    list[str] aFuncUn = [];
+    for(l <- aFuncCalled)
+    {
+        bool bAdd = true;
+        for(l2 <- aFuncUn)
+        {
+            if(l == l2)
+                bAdd = false;
+        }
+        if(bAdd) aFuncUn+=l;
+    }
+    /*
+    log("Class:");
+    log(inp.src);
+    log("Metrics:");
+    log(size(aFuncCalled));
+    log(size(aFuncUn));
+    log(size(aDecl));
+    log(size(aEx));
+    log("Decl:");
+    for(l <- aDecl) log(l);
+    log("Ex:");
+    for(l <- aEx) log(l);
+    */
+    return metric(size(aFuncCalled), size(aFuncUn), size(aDecl), size(aEx));
+}
+
+rel[loc, loc] analyze(loc project, bool bBigOnly){
+    list[tuple[metric, loc]] aPair = [];
+    visit(getASTs(project)){
+        case c:\class(_, _, _, _, _, _): {
+            if(!bBigOnly || bigMetric(calcClass(c)))
+                aPair += <calcClass(c), c.src>;
+        }
+        case c:\class(_):{
+            if(!bBigOnly || bigMetric(calcClass(c)))
+                aPair += <calcClass(c), c.src>;
+        }
+    }
+
+    rel[loc, loc] ans = {};
+    for(p1 <- aPair){
+        for(p2 <- aPair){
+            if(<m1, l1>:=p1 && <m2, l2>:=p2 && isLexicallyLess(l1, l2)){
+                if(compareMetrics(m1,m2))
+                    ans += <l1,l2>;
+            }
+        }
+    }
+    return ans;
 }

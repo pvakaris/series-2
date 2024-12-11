@@ -28,7 +28,7 @@ void runAnalysisOn(loc project, str projectName) {
     astCloneAnalysis(project);
     logDashedLine();
 
-    metricsCloneAnalysis(project);
+    metricsCloneAnalysis(project, true);
     logDashedLine();
 
     interval runtime = createInterval(startTime, now());
@@ -69,11 +69,11 @@ private void astCloneAnalysis(project) {
     // logCloneMap("TYPE 3 CLONES", functional, sumMap(mapThree), sumMapDeep(mapThree));
 }
 
-private void metricsCloneAnalysis(project) {
+private void metricsCloneAnalysis(project, bool bBigOnly) {
     log("Metrics Clone Analysis");
     logDashedLine();
 
-    rel[loc, loc] aClones = analyze(project);
+    rel[loc, loc] aClones = analyze(project, bBigOnly);
     for(tuple[loc, loc] pair <- aClones){
         log("Clone pair:");
         if(<l1, l2> := pair){
