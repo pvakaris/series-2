@@ -1,30 +1,131 @@
-public class CloneTypeThree {
-    public static int doAdd(int x, int y) {
-        return x + y;
+public class Clone_t3c1 {
+    
+    // sum two numbers
+    public static int sum(int i, int j) {
+        return i + j;
     }
 
-    public static int doSubtract(int x, int y) {
-        return x - y;
+    // subtract two numbers
+    public static int subtract(int i, int j) {
+        return i - j;
     }
 
-    public static int op1(int i1, int i2, int i3, int i4){
-        int p1 = i1 + i2;
-        int p2 = i1 - i2;
-        int p3 = p1*p2;
-        int p4 = i3/i4;
-        int p5 = p4 - p3;
-        return p5;
+    // calculate factorial of a number
+    public static int calcFactorial(int arg){
+        if (arg <= 1)
+            return 1;
+        else
+            return arg * factorial(arg - 1);
     }
 
-    public static int op2(int i1, int i2, int i3, int i4){
-        int p1 = i1 * i2;
-        int p2 = i1 + i2;
-        int p3 = p2 - p1;
-        int p4 = i3 * i4;
-        int p5 = i3 - i4;
-        int p6 = i3 - 6*i4;
-        int p7 = i1 + i2 + i3 + i4;
-        int p8 = p1 + p2 + p3 + p4 + p5 + p6 + p7;
-        return p8;
+    // calculate i-th member of fibonachi sequence
+    public static int clacFib(int arg){
+        if (arg < 1)
+            return -1;
+        int a = 1;
+        int b = 1;
+        for(int i = 1; i < arg; i++){
+            int tmp = b;
+            b = a + b;
+            a = tmp;
+        }
+        return a;
+    }
+
+    // calculate sum of all numbers from 1 to n
+    public static int summ(int n){
+        int s = 0;
+        for(int i = 0; i <= n; i++){
+            s += i;
+        }
+        return s;
+    }
+}
+
+public class Clone_t3c2 {
+    
+    // sum two numbers
+    public static int sum(int i, int j) {
+        return i + j;
+    }
+
+    // subtract two numbers
+    public static int subtract(int i, int j) {
+        return i - j;
+    }
+
+    // calculate factorial of a number
+    public static int calcFactorial(int arg){
+        if (arg <= 1)
+            return 1;
+        else
+            return arg * factorial(arg - 1);
+    }
+
+    // calculate i-th member of fibonachi sequence
+    public static int clacFib(int arg){
+        if (arg < 1)
+            return -1;
+        int a = 1;
+        int b = 1;
+        for(int i = 0; i < arg - 1; i++){
+            int tmp = b;
+            b = a + b;
+            a = tmp;
+        }
+        return a;
+    }
+
+    // calculate sum of all numbers from 1 to n
+    public static int summ(int n){
+        int s = 0;
+        for(int i = 0; i <= n; i++){
+            s += i;
+        }
+        return s;
+    }
+}
+
+public class Clone_t3c3 {
+    
+    // sum two numbers
+    public static int sum(int i, int j) {
+        return i + j;
+    }
+
+    // subtract two numbers
+    public static int subtract(int i, int j) {
+        return i - j;
+    }
+
+    // calculate factorial of a number
+    public static int calcFactorial(int arg){
+        if (arg <= 1)
+            return 1;
+        else
+            return arg * factorial(arg - 1);
+    }
+
+    // calculate i-th member of fibonachi sequence
+    public static int clacFib(int arg){
+        if (arg < 1)
+            return -1;
+        int a = 1;
+        int b = 1;
+        for(int i = 1; i < arg; i++){
+            int tmp = b;
+            b = a - b;
+            a = tmp;
+        }
+        return a;
+    }
+
+    // calculate sum of all numbers from 1 to n
+    public static int summ(int n){
+        int s = 0;
+        for(int i = 0; i <= n; i++){
+            s -= i;
+        }
+        return s;
     }
 }
