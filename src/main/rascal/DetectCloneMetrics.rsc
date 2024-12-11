@@ -15,14 +15,15 @@ import utils::Logger;
 
 import metrics::Volume;
 
-import Constants;
-
 import ast::AstHelpers;
 import ast::AstAlgorithm;
+
+import Constants;
 
 // class metrics
 data metric = metric(int i1, int i2, real i3, int i4, int i5);
 metric deltaCloneType3 = metric(5, 2, 2.0, 2, 5);
+metric zeroMetric = metric(0, 0, 0.0, 0, 0);
 
 bool compareMetrics(metric m1, metric m2, metric delta){
     if(metric(m1n1, m1n2, m1n3, m1n4, m1n5) := m1 && 
@@ -48,18 +49,18 @@ int decisionComplexity(Expression expr)
 {
     int comp = 0;
     visit(expr){
-        case \less(_, _): comp++;
-        case \greater(_, _): comp++;
-        case \lessEquals(_, _): comp++;
-        case \greaterEquals(_, _): comp++;
-        case \equals(_, _): comp++;
-        case \notEquals(_, _): comp++;
-        case \xor(_, _): comp++;
-        case \or(_, _): comp++;
-        case \and(_, _): comp++;
-        case \conditionalOr(_, _): comp++;
-        case \conditionalAnd(_, _): comp++;
-        case \preNot(_): comp++;
+        case \less(_, _): comp+=1;
+        case \greater(_, _): comp+=1;
+        case \lessEquals(_, _): comp+=1;
+        case \greaterEquals(_, _): comp+=1;
+        case \equals(_, _): comp+=1;
+        case \notEquals(_, _): comp+=1;
+        case \xor(_, _): comp+=1;
+        case \or(_, _): comp+=1;
+        case \and(_, _): comp+=1;
+        case \conditionalOr(_, _): comp+=1;
+        case \conditionalAnd(_, _): comp+=1;
+        case \preNot(_): comp+=1;
     }
     return comp;
 }
@@ -131,7 +132,7 @@ metric calcClass(Declaration inp){
         }
 
         // decisions
-        list[Expression] aDecision;
+        list[Expression] aDecision = [];
         visit(body){
             case \do(_, expr): aDecision += expr;
             case \foreach(_, expr, _): aDecision += expr;
@@ -154,15 +155,14 @@ metric calcClass(Declaration inp){
 
         int totalComplexity = 0;
         for(e <- aDecision) totalComplexity += decisionComplexity(e);
-        real averComp = (size(aDecision) == 0) ? 0.0 : (toReal(totalComplexity) / toReal(aDecision));
+        real averComp = (size(aDecision) == 0) ? 0.0 : (toReal(totalComplexity) / toReal(size(aDecision)));
         return metric(size(aFuncCalled), size(aFuncUn), averComp, size(aDecl), size(aEx));
     }
     return metric(-1, -1, -1.0, -1, -1);
 }
 
 // diagnostic tools
-void printMetric(loc project, str className)
-{
+void printMetric(loc project, str className){
     visit(getASTs(project)){
         case c:\class(_, \stringLiteral(s, _), _, _, _, _): {
             if(s == className){
@@ -179,28 +179,41 @@ void printMetric(loc project, str className)
     }
 }
 
-/*
-rel[loc, loc] analyze(loc project, bool bBigOnly){
-    list[tuple[metric, loc]] aPair = [];
+list[list[loc]] classifyType2(loc project){
+    rel[metric, list[loc]] aClass = {};
     visit(getASTs(project)){
         case c:\class(_, _, _, _, _, _): {
-            if(!bBigOnly || bigMetric(calcClass(c)))
-                aPair += <calcClass(c), c.src>;
+            metric met = calcClass(c);
+            bool bAdd = true;
+            for(elem <- aClass){
+                if(<m, l> := elem && compareMetrics(met, m, zeroMetric)){
+                    bAdd = false;
+                    l += c.src;
+                    aClass -= elem;
+                    aClass += <m, l>;
+                    break;
+                }
+            }
+            if(bAdd) aClass += <met, [c.src]>;
         }
         case c:\class(_):{
-            if(!bBigOnly || bigMetric(calcClass(c)))
-                aPair += <calcClass(c), c.src>;
+            metric met = calcClass(c);
+            bool bAdd = true;
+            for(elem <- aClass){
+                if(<m, l> := elem && compareMetrics(met, m, zeroMetric)){
+                    bAdd = false;
+                    l += c.src;
+                }
+            }
+            if(bAdd) aClass += <met, [c.src]>;
         }
     }
 
-    rel[loc, loc] ans = {};
-    for(p1 <- aPair){
-        for(p2 <- aPair){
-            if(<m1, l1>:=p1 && <m2, l2>:=p2 && isLexicallyLess(l1, l2)){
-                if(compareMetrics(m1,m2))
-                    ans += <l1,l2>;
-            }
+    list[list[loc]] ans = [];
+    for(elem <- aClass){
+        if(<_, l> := elem){
+            ans += [l];
         }
     }
     return ans;
-}*/
+}
