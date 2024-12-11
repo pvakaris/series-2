@@ -1,5 +1,8 @@
 package org.example;
 
+import org.example.clones.Calculator;
+import org.example.clones.CloneT1C1;
+
 public class Main {
     public static void main(String[] args) {
         System.out.println("Today we will perform calculations!");

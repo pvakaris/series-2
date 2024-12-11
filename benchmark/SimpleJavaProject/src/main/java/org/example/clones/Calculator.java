@@ -1,4 +1,4 @@
-package org.example;
+package org.example.clones;
 
 public class Calculator {
     public Long add(Long a, Long b) {

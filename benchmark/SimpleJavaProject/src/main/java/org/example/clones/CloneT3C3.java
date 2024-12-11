@@ -1,6 +1,6 @@
-package org.example;
+package org.example.clones;
 
-public class CloneT2C1 {
+public class CloneT3C3 {
 
     // Sum two numbers
     public static int sum(int i, int j) {
@@ -28,7 +28,7 @@ public class CloneT2C1 {
         int b = 1;
         for(int i = 1; i < arg; i++) {
             int tmp = b;
-            b = a + b;
+            b = a - b;
             a = tmp;
         }
         return a;
@@ -36,11 +36,9 @@ public class CloneT2C1 {
 
     // Calculate sum of all numbers from 1 to n
     public static int summ(int n) {
-        if (n < 0)
-            return 0;
         int s = 0;
         for(int i = 0; i <= n; i++) {
-            s += i;
+            s -= i;
         }
         return s;
     }

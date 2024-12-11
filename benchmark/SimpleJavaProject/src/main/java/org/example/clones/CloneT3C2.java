@@ -1,4 +1,4 @@
-package org.example;
+package org.example.clones;
 
 public class CloneT3C2 {
 

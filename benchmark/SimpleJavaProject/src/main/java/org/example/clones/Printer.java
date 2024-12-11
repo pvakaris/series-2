@@ -1,4 +1,4 @@
-package org.example;
+package org.example.clones;
 
 /*
     Simple Java class containing simple code clones of type I, II and III
