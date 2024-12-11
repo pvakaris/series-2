@@ -38,8 +38,8 @@ void runAnalysisOn(loc project, str projectName) {
 
 void main() {
     logDashedLine();
-    runAnalysisOn(SMALLSQL_CWD, "SmallSQL Project");
-    // runAnalysisOn(HSQLDB_CWD, "HSQLDB Project");
+    // runAnalysisOn(SMALLSQL_CWD, "SmallSQL Project");
+    runAnalysisOn(HSQLDB_CWD, "HSQLDB Project");
     // runAnalysisOn(SIMPLE_PROJECT_CWD, "Simple Java Project");
 }
 
@@ -73,12 +73,11 @@ private void metricsCloneAnalysis(project, bool bBigOnly) {
     log("Metrics Clone Analysis");
     logDashedLine();
 
-    rel[loc, loc] aClones = analyze(project, bBigOnly);
-    for(tuple[loc, loc] pair <- aClones){
-        log("Clone pair:");
-        if(<l1, l2> := pair){
-            log(l1);
-            log(l2);
+    list[list[loc]] aCl = classifyType2(project);
+    for(lis <- aCl){
+        if(size(lis)>1){
+            log("Class:");
+            for(loca <- lis) log(loca);
         }
     }
 }
