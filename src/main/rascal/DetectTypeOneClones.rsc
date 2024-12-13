@@ -24,6 +24,7 @@ str condenceStr(str input){
     //remove whitespaces
     input = replaceAll(input, " ", "");
 
+    //remove comments
     while(findFirst(input, "/*") != -1){
         int pos1 = findFirst(input, "/*");
         int pos2 = findFirst(input, "*/");
@@ -69,6 +70,66 @@ test bool testCondenceStr17() {return condenceStr("a    /*ntougun*/    +    b;  
 test bool testCondenceStr18() {return condenceStr("end of comment*/a+b;") == "a+b;";}
 test bool testCondenceStr19() {return condenceStr("a + b ; /*start of comment") == "a+b;";}
 
-str stand(Declaration class){
-    return "placeholder";
+list[str] classStandardRepr(Declaration class){
+    list[str] raw = classStr(class);
+    list[str] processed = [];
+    for(s <- raw){
+        if(condenceStr(s) != " ")
+            processed += condenceStr(s);
+    }
+    return processed;
+}
+
+boolean compClassWithStdRepr(Declaration class, list[str] repr){
+    list[str] repr2 = classStandardRepr(class);
+    if(size(repr) == size(repr2)){
+        int i = 0;
+        while(i < size(repr)){
+            if(elementAt(repr, i) != elementAt(repr2, i))
+                return false;
+        }
+        return true;
+    }
+    else
+        return false;
+}
+
+list[list[loc]] classifyType1(loc project){
+    rel[list[str], list[loc]] aClass = {};
+    visit(getASTs(project)){
+        case c:\class(_, _, _, _, _, _): {
+            bool bAdd = true;
+            for(elem <- aClass){
+                if(<r, l> := elem && compareClassWithStdRepr(c, r)){
+                    bAdd = false;
+                    l += c.src;
+                    aClass -= elem;
+                    aClass += <m, r>;
+                    break;
+                }
+            }
+            if(bAdd) aClass += <classStandardRepr(c), [c.src]>;
+        }
+        case c:\class(_): {
+            bool bAdd = true;
+            for(elem <- aClass){
+                if(<r, l> := elem && compareClassWithStdRepr(c, r)){
+                    bAdd = false;
+                    l += c.src;
+                    aClass -= elem;
+                    aClass += <m, r>;
+                    break;
+                }
+            }
+            if(bAdd) aClass += <classStandardRepr(c), [c.src]>;
+        }
+    }
+
+    list[list[loc]] ans = [];
+    for(elem <- aClass){
+        if(<_, l> := elem){
+            ans += [l];
+        }
+    }
+    return ans;
 }

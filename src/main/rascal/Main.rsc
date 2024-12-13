@@ -40,8 +40,10 @@ void runAnalysisOn(loc project, str projectName) {
 void main() {
     logDashedLine();
     // runAnalysisOn(SMALLSQL_CWD, "SmallSQL Project");
-    runAnalysisOn(HSQLDB_CWD, "HSQLDB Project");
+    // runAnalysisOn(HSQLDB_CWD, "HSQLDB Project");
     // runAnalysisOn(SIMPLE_PROJECT_CWD, "Simple Java Project");
+
+    printType1CloneClasses(SMALLSQL_CWD);
 }
 
 // PRIVATE METHODS
@@ -68,6 +70,19 @@ private void astCloneAnalysis(project) {
     // Type 3
     // map[value, set[loc]] mapThree = typeThree(asts);
     // logCloneMap("TYPE 3 CLONES", functional, sumMap(mapThree), sumMapDeep(mapThree));
+}
+
+private void printType1CloneClasses(project){
+    log("Type-1 clones equivalence classes:");
+    logDashedLine();
+
+    list[list[loc]] aCl = classifyType1(project);
+    for(lis <- aCl){
+        if(size(lis)>1){
+            log("Class:");
+            for(loca <- lis) log(loca);
+        }
+    }
 }
 
 private void metricsCloneAnalysis(project, bool bBigOnly) {

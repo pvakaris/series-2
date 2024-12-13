@@ -5,6 +5,8 @@ import List;
 import lang::java::m3::Core;
 import lang::java::m3::AST;
 import String;
+import Location;
+import demo::lang::Func::Parse;
 
 list[Declaration] getASTs(loc project) {
     M3 model = createM3FromMavenProject(project);
@@ -115,4 +117,10 @@ int countChildren(node n, int maxDepth) {
 		
 
     return count;
+}
+
+list[str] classStr(Declaration class){
+	str strRaw = class.src.getContent(class);
+	list[str] res = Parse(strRaw);
+	return res;
 }
