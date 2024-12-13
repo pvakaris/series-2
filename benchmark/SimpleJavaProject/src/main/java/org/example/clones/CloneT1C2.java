@@ -1,6 +1,7 @@
 package org.example.clones;
 
-public class CloneT1C2 {
+public class CloneT1C2{
+public class CalculatorAdvanced {
 
     public static int add(int a, int b) {
         return a + b; // Return statement
@@ -39,4 +40,5 @@ public class CloneT1C2 {
         }
         return s; // Return statement
     }
+}
 }

@@ -23,16 +23,25 @@ import Constants;
 str condenceStr(str input){
     //remove whitespaces
     input = replaceAll(input, " ", "");
-
+    input = replaceAll(input, "\r", "");
+    input = replaceAll(input, "\n", "");
+    
     //remove comments
     while(findFirst(input, "/*") != -1){
-        int pos1 = findFirst(input, "/*");
-        int pos2 = findFirst(input, "*/");
-        if(pos2 == -1){
-            input = substring(input, 0, pos1);
+        int posSt = findFirst(input, "/*");
+        list[int] aPosEn = findAll(input, "*/");
+        int posEn = -1;
+        for(pos <- aPosEn){
+            if(pos > posSt + 1){
+                posEn = pos;
+                break;
+            }
+        }
+        if(posEn == -1){
+            input = substring(input, 0, posSt);
         }
         else{
-            str rem = substring(input, pos1, pos2 + 2);
+            str rem = substring(input, posSt, posEn + 2);
             input = replaceAll(input, rem, "");
         }
     }
@@ -69,24 +78,30 @@ test bool testCondenceStr16() {return condenceStr("a/*ntougun*/ + b;") == "a+b;"
 test bool testCondenceStr17() {return condenceStr("a    /*ntougun*/    +    b;       ") == "a+b;";}
 test bool testCondenceStr18() {return condenceStr("end of comment*/a+b;") == "a+b;";}
 test bool testCondenceStr19() {return condenceStr("a + b ; /*start of comment") == "a+b;";}
+test bool testCondenceStr20() {return condenceStr("a + b ; /*") == "a+b;";}
+test bool testCondenceStr21() {return condenceStr("a/*/*nested comment*/+b;") == "a+b;";}
+test bool testCondenceStr22() {return condenceStr("*/d=f+g;/*com*/a=g+h;/*com") == "d=f+g;a=g+h;";}
+test bool testCondenceStr23() {return condenceStr("                        \" */ FROM /* -- comment */\" + TABLE_NAME + \" -- my comment /* \n\r\" +") == "FROM\"+TABLE_NAME+\"--mycomment";}
+test bool testCondenceStr24() {return condenceStr("*/") == "";}
 
 list[str] classStandardRepr(Declaration class){
     list[str] raw = classStr(class);
     list[str] processed = [];
     for(s <- raw){
-        if(condenceStr(s) != " ")
+        if(!isEmpty(condenceStr(s)))
             processed += condenceStr(s);
     }
     return processed;
 }
 
-boolean compClassWithStdRepr(Declaration class, list[str] repr){
+bool compClassWithStdRepr(Declaration class, list[str] repr){
     list[str] repr2 = classStandardRepr(class);
     if(size(repr) == size(repr2)){
         int i = 0;
         while(i < size(repr)){
             if(elementAt(repr, i) != elementAt(repr2, i))
                 return false;
+            i += 1;
         }
         return true;
     }
@@ -100,11 +115,11 @@ list[list[loc]] classifyType1(loc project){
         case c:\class(_, _, _, _, _, _): {
             bool bAdd = true;
             for(elem <- aClass){
-                if(<r, l> := elem && compareClassWithStdRepr(c, r)){
+                if(<r, l> := elem && compClassWithStdRepr(c, r)){
                     bAdd = false;
                     l += c.src;
                     aClass -= elem;
-                    aClass += <m, r>;
+                    aClass += <r, l>;
                     break;
                 }
             }
@@ -117,7 +132,7 @@ list[list[loc]] classifyType1(loc project){
                     bAdd = false;
                     l += c.src;
                     aClass -= elem;
-                    aClass += <m, r>;
+                    aClass += <r, l>;
                     break;
                 }
             }

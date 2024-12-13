@@ -43,7 +43,7 @@ void main() {
     // runAnalysisOn(HSQLDB_CWD, "HSQLDB Project");
     // runAnalysisOn(SIMPLE_PROJECT_CWD, "Simple Java Project");
 
-    printType1CloneClasses(SMALLSQL_CWD);
+    printType1CloneClasses(SIMPLE_PROJECT_CWD);
 }
 
 // PRIVATE METHODS
