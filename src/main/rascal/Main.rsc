@@ -16,6 +16,7 @@ import metrics::Volume;
 
 import Constants;
 import DetectCloneMetrics;
+import DetectTypeOneClones;
 
 import ast::AstHelpers;
 import ast::AstAlgorithm;
