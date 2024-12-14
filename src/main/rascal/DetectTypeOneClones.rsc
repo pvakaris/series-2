@@ -21,6 +21,7 @@ import ast::AstAlgorithm;
 import Constants;
 
 str condenceStr(str input){
+    //log(input);
     //remove whitespaces
     input = replaceAll(input, " ", "");
     input = replaceAll(input, "\r", "");
@@ -84,67 +85,99 @@ test bool testCondenceStr22() {return condenceStr("*/d=f+g;/*com*/a=g+h;/*com") 
 test bool testCondenceStr23() {return condenceStr("                        \" */ FROM /* -- comment */\" + TABLE_NAME + \" -- my comment /* \n\r\" +") == "FROM\"+TABLE_NAME+\"--mycomment";}
 test bool testCondenceStr24() {return condenceStr("*/") == "";}
 
-list[str] classStandardRepr(Declaration class){
+data reprClass = reprClass(int h1, int h2, list[str]);
+
+reprClass classStandardRepr(Declaration class){
     list[str] raw = classStr(class);
     list[str] processed = [];
     for(s <- raw){
         if(!isEmpty(condenceStr(s)))
             processed += condenceStr(s);
     }
-    return processed;
+
+    int h1 = size(processed);
+    int h2 = 0;
+    for(s <- processed){
+        h2 += size(s);
+    }
+
+    return reprClass(h1, h2, processed);
 }
 
-bool compClassWithStdRepr(Declaration class, list[str] repr){
-    list[str] repr2 = classStandardRepr(class);
-    if(size(repr) == size(repr2)){
+int compStdRepr(reprClass repr1, reprClass repr2){
+    if(reprClass(h1_1, h1_2, aStr1) := repr1 && reprClass(h2_1, h2_2, aStr2) := repr2){
+        if(h1_1 < h2_1)
+            return -1;
+        if(h1_1 > h2_1)
+            return 1;
+        if(h1_2 < h2_2)
+            return -1;
+        if(h1_2 > h2_2)
+            return 1;
+
         int i = 0;
-        while(i < size(repr)){
-            if(elementAt(repr, i) != elementAt(repr2, i))
-                return false;
+        while(i < size(aStr1)){
+            if(elementAt(aStr1, i) < elementAt(aStr2, i))
+                return -1;
+            if(elementAt(aStr1, i) > elementAt(aStr2, i))
+                return -1;
             i += 1;
         }
-        return true;
+        return 0;
     }
-    else
-        return false;
+    return -2;
+}
+
+bool lessThen(tuple[reprClass, loc] m1, tuple[reprClass, loc] m2){
+    if(<r1, _> := m1 && <r2, _> := m2){
+        return compStdRepr(r1, r2) == -1;
+    }
+    return false;
 }
 
 list[list[loc]] classifyType1(loc project){
-    rel[list[str], list[loc]] aClass = {};
+    list[tuple[reprClass, loc]] aClass = [];
     visit(getASTs(project)){
         case c:\class(_, _, _, _, _, _): {
-            bool bAdd = true;
-            for(elem <- aClass){
-                if(<r, l> := elem && compClassWithStdRepr(c, r)){
-                    bAdd = false;
-                    l += c.src;
-                    aClass -= elem;
-                    aClass += <r, l>;
-                    break;
-                }
-            }
-            if(bAdd) aClass += <classStandardRepr(c), [c.src]>;
+            aClass += <classStandardRepr(c), c.src>;
         }
         case c:\class(_): {
-            bool bAdd = true;
-            for(elem <- aClass){
-                if(<r, l> := elem && compareClassWithStdRepr(c, r)){
-                    bAdd = false;
-                    l += c.src;
-                    aClass -= elem;
-                    aClass += <r, l>;
-                    break;
-                }
-            }
-            if(bAdd) aClass += <classStandardRepr(c), [c.src]>;
+            aClass += <classStandardRepr(c), c.src>;
         }
     }
 
-    list[list[loc]] ans = [];
-    for(elem <- aClass){
-        if(<_, l> := elem){
-            ans += [l];
+    list[tuple[reprClass, loc]] aClassSorted = [];
+    while(size(aClass) > 0){
+        int ind = 0;
+        int i = 0;
+        while(i < size(aClass)){
+            if(lessThen(elementAt(aClass, i), elementAt(aClass, ind)))
+                ind = i;
+            i+=1;
         }
+        aClassSorted += elementAt(aClass, ind);
+        aClass = remove(aClass, ind);
+    }
+
+    for(t <- aClass){
+        if(<_, l>:=t)
+        log(l);
+    }
+
+    list[list[loc]] ans = [];
+    int i = 0;
+    list[loc] curClass = [];
+    while(i < (size(aClassSorted) - 1)){
+        if(<r1, l> := elementAt(aClassSorted, i) && <r2, _> := elementAt(aClassSorted, i+1)){
+            curClass += l;
+            if(compStdRepr(r1, r2) != 0){
+                if(size(curClass) > 1){
+                    ans += [curClass];
+                }
+            curClass = [];
+            }
+        }
+        i+=1;
     }
     return ans;
 }
