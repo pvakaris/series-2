@@ -17,6 +17,7 @@ import metrics::Volume;
 import Constants;
 import DetectCloneMetrics;
 import DetectTypeOneClones;
+import DetectCloneAst;
 
 import ast::AstHelpers;
 import ast::AstAlgorithm;
@@ -76,7 +77,8 @@ private void printType1CloneClasses(project){
     log("Type-1 clones equivalence classes:");
     logDashedLine();
 
-    list[list[loc]] aCl = classifyType1(project);
+    list[list[loc]] aCl = classifyAST(project, true);
+    //list[list[loc]] aCl = classifyType1(project);
     for(lis <- aCl){
         if(size(lis)>1){
             log("Class:");
