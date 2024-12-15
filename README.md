@@ -1,4 +1,4 @@
-## Clone detection tool
+## Code clone detector (CCD)
 
 This is a RASCAL program that detects code clones.
 
