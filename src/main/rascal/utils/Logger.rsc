@@ -92,7 +92,8 @@ void logCloneStat(str cloneType, str detectorType, loc project, list[list[loc]] 
         duplLines += nL;
     }
     log("Biggest clone (in lines):");log(biggestClone);
-    log("Percentage of duplicated lines:");log(percent(duplLines, countFunctionalLinesProject(project)));
+    real per = roundN2(100.0 * toReal(duplLines) / toReal(countFunctionalLinesProject(project)));
+    log("Percentage of duplicated lines:");log(per);
 
     logDashedLine();
 
