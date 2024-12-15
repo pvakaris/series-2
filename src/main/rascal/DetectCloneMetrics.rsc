@@ -179,7 +179,7 @@ void printMetric(loc project, str className){
     }
 }
 
-list[list[loc]] classifyType2(loc project){
+list[list[loc]] classifyMetrics(loc project){
     rel[metric, list[loc]] aClass = {};
     visit(getASTs(project)){
         case c:\class(_, _, _, _, _, _): {

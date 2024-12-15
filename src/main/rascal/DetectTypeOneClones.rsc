@@ -155,7 +155,7 @@ bool lessThen(tuple[reprClass, loc] m1, tuple[reprClass, loc] m2){
     return false;
 }
 
-list[list[loc]] classifyType1(loc project){
+list[list[loc]] classifyTextual(loc project){
     list[tuple[reprClass, loc]] aClass = [];
     visit(getASTs(project)){
         case c:\class(_, _, _, _, _, _): {
