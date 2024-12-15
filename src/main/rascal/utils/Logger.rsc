@@ -58,15 +58,37 @@ void logCloneMap(map[value, set[loc]] cloneMap){
     }
 }
 
-void logCloneMap(str cloneType, int functionalLines, int numberOfClones, tuple[int, int] cloneCounts) {
-    int numberOfCloneClasses = cloneCounts[0];
-    int numberOfClonedLines = cloneCounts[1];
-    
+void logCloneStat(str cloneType, str detectorType, loc project, list[list[loc]] aClones) {
     logDashedLine();
-    log(cloneType);
+
+    log("Clone detector: <detectorType>");
+
+    log("Clone type: <cloneType>");
+
+    log("Number of clone classes: <size(aClones)>");
+
+    int maxx = 0;
+    for(cl <- aClones)
+    {
+        if(maxx < size(cl))
+            maxx = size(cl);
+    }
+    log("Biggest clone class (in members): maxx")
+
+    log("Number of clones: <size(concat(aClonse))>");
+
+    int duplLines = 0;
+    int biggestClone = 0;
+    for(l <- concat(aClones)){
+        list[str] aStr = split("\n", getContent(l));
+        int nL = size(removeComments(aStr));
+        if(biggestClone < nL)
+            biggestClone = nL;
+        dupLines += nL;
+    }
+    real percDup = toReal(dupLines) / toReal(countFunctionalLinesProject(project)) * 100.0;
+    log("Biggest clone (in lines): <biggestClone>");
+    log("Percentage of duplicated lines: <percDup>");
+
     logDashedLine();
-    log("Clones: <numberOfClones>");
-    log("Clone classes: <numberOfCloneClasses>");
-    log("Cloned lines: <numberOfClonedLines>");
-    log("Cloned lines percentage (of functional): <percent(numberOfClonedLines, functionalLines)>%");
 }
