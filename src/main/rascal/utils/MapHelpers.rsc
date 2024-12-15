@@ -22,22 +22,6 @@ int sumMap(map[value, set[loc]] mapp){
     return sum;
 }
 
-tuple[int, int] sumMapDeep(map[value, set[loc]] mapp) {
-    int sum = 0;
-    int total = 0;
-
-    for (key <- mapp) {
-        int size = size(mapp[key]);
-
-        if (size > 0) {
-            sum += 1;
-            funcl = countFunctionalLines(getFirstFrom(mapp[key]));
-            total += size * funcl;
-        }
-    }
-    return <sum, total>;
-}
-
 map[value, set[loc]] filterEntriesAboveThreshold(map[value, set[loc]] mapp, int threshold=1) {
     map[value, set[loc]] result = ();
     for (entry <- mapp) {

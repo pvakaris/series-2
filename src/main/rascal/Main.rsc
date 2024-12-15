@@ -20,7 +20,6 @@ import DetectTypeOneClones;
 import DetectCloneAst;
 
 import ast::AstHelpers;
-import ast::AstAlgorithm;
 
 void runAnalysisOn(loc project, str projectName) {
     log("Running analysis on: <projectName>");
@@ -28,7 +27,7 @@ void runAnalysisOn(loc project, str projectName) {
     logDashedLine();
 
     logCloneStat("1", "AST", project, classifyAST(project, false), false);
-    logCloneStat("2", "AST", project, classifyAST(project, true), false);
+    // logCloneStat("2", "AST", project, classifyAST(project, true), false);
     logCloneStat("1", "textual", project, classifyTextual(project), false);
     logCloneStat("2", "metrics", project, classifyMetrics(project), false);
 

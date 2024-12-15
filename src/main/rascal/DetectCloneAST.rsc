@@ -16,7 +16,6 @@ import utils::Logger;
 import metrics::Volume;
 
 import ast::AstHelpers;
-import ast::AstAlgorithm;
 
 import Constants;
 
