@@ -3,7 +3,11 @@ module utils::Logger
 import IO;
 import String;
 import DateTime;
+import List;
+import Location;
+import util::Math;
 import utils::Calculator;
+import metrics::Volume;
 
 void log(str message) {
     println(message);
@@ -49,23 +53,24 @@ void logDuration(str title, Duration dur) {
     log("<title> <trim(result)>");
 }
 
-void logCloneMap(map[value, set[loc]] cloneMap){
-    for (key <- cloneMap) {
-        for (location <- cloneMap[key]) {
+void logCloneMap(list[list[loc]] cloneMap){
+    for (l1 <- cloneMap) {
+        for (location <- l1) {
             log(location);
         }
         logDashedLine();
     }
 }
 
-void logCloneStat(str cloneType, str detectorType, loc project, list[list[loc]] aClones) {
+void logCloneStat(str cloneType, str detectorType, loc project, list[list[loc]] aClones, bool bDetailed) {
     logDashedLine();
 
     log("Clone detector: <detectorType>");
 
     log("Clone type: <cloneType>");
 
-    log("Number of clone classes: <size(aClones)>");
+    int sz = size(aClones);
+    log("Number of clone classes:");log(sz);
 
     int maxx = 0;
     for(cl <- aClones)
@@ -73,9 +78,9 @@ void logCloneStat(str cloneType, str detectorType, loc project, list[list[loc]] 
         if(maxx < size(cl))
             maxx = size(cl);
     }
-    log("Biggest clone class (in members): maxx")
+    log("Biggest clone class (in members):");log(maxx);
 
-    log("Number of clones: <size(concat(aClonse))>");
+    log("Number of clones: ");log(size(concat(aClones)));
 
     int duplLines = 0;
     int biggestClone = 0;
@@ -84,11 +89,14 @@ void logCloneStat(str cloneType, str detectorType, loc project, list[list[loc]] 
         int nL = size(removeComments(aStr));
         if(biggestClone < nL)
             biggestClone = nL;
-        dupLines += nL;
+        duplLines += nL;
     }
-    real percDup = toReal(dupLines) / toReal(countFunctionalLinesProject(project)) * 100.0;
-    log("Biggest clone (in lines): <biggestClone>");
-    log("Percentage of duplicated lines: <percDup>");
+    real percDup = toReal(duplLines) / toReal(countFunctionalLinesProject(project)) * 100.0;
+    log("Biggest clone (in lines):");log(biggestClone);
+    log("Percentage of duplicated lines:");log(percDup);
 
     logDashedLine();
+
+    if(bDetailed)
+        logCloneMap(aClones);
 }
