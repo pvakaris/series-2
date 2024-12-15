@@ -1,6 +1,7 @@
 package org.example.clones;
 
 public class CloneT2C3 {
+    
     public static int sum(int i, int j) {
         return i + j;
     }

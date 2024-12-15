@@ -1,7 +1,6 @@
 package org.example.clones;
 
 public class CloneT1C3{
-public class CalculatorAdvanced {
 
     /* This is a 
     multi-string comment,
@@ -60,5 +59,4 @@ public class CalculatorAdvanced {
         }
         return s; // Return statement
     }
-}
 }
