@@ -211,7 +211,7 @@ list[list[loc]] classifyMetrics(loc project){
 
     list[list[loc]] ans = [];
     for(elem <- aClass){
-        if(<_, l> := elem){
+        if(<_, l> := elem && size(l) > 1){
             ans += [l];
         }
     }

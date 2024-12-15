@@ -27,7 +27,6 @@ void runAnalysisOn(loc project, str projectName) {
     datetime startTime = now();
     logDashedLine();
 
-    log(size(classifyAST(project, false)));
     logCloneStat("1", "AST", project, classifyAST(project, false), false);
     logCloneStat("2", "AST", project, classifyAST(project, true), false);
     logCloneStat("1", "textual", project, classifyTextual(project), false);
@@ -40,8 +39,8 @@ void runAnalysisOn(loc project, str projectName) {
 
 void main() {
     logDashedLine();
-    //runAnalysisOn(SMALLSQL_CWD, "SmallSQL Project");
-    //runAnalysisOn(HSQLDB_CWD, "HSQLDB Project");
+    runAnalysisOn(SMALLSQL_CWD, "SmallSQL Project");
+    runAnalysisOn(HSQLDB_CWD, "HSQLDB Project");
     runAnalysisOn(SIMPLE_PROJECT_CWD, "Simple Java Project");
 }
 

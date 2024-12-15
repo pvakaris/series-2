@@ -28,7 +28,6 @@ public class CloneT3C3 {
         int b = 1;
         for(int i = 1; i < arg; i++) {
             int tmp = b;
-            b = a - b;
             a = tmp;
         }
         return a;

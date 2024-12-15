@@ -13,8 +13,8 @@ public class CloneT3C2 {
     }
 
     // Calculate factorial of a number
-    public static int calcFactorial(int arg) {
-        if (arg <= 1)
+    public static int calcFactorial(int arg, int add) {
+        if (arg <= 1 && add == 6)
             return 1;
         else
             return arg * calcFactorial(arg - 1);

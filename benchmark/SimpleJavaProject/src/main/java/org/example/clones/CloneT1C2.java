@@ -2,6 +2,14 @@ package org.example.clones;
 
 public class CloneT1C2{
 
+public static int form(int a, int b, int c, int d) {
+    int f = a+b;
+    int y = f+c;
+    return y;
+}
+
+public class CalculatorAdvanced{
+
     public static int add(int a, int b) {
         return a + b; // Return statement
     }
@@ -39,4 +47,5 @@ public class CloneT1C2{
         }
         return s; // Return statement
     }
+}
 }

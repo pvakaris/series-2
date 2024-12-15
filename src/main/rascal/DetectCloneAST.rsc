@@ -586,7 +586,6 @@ list[list[loc]] classifyAST(loc project, bool bType2){
             aClass += <transformClassToAST(c), c.src>;
         }
         case c:\class(_): {
-            log(c.src);
             aClass += <transformClassToAST(c), c.src>;
         }
     }

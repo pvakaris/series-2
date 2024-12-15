@@ -2,6 +2,16 @@ package org.example.clones;
 
 public class CloneT1C3{
 
+public static int form(int a, int b, int c, int d) {
+    int f = a+b;
+    int y = f+c;
+    int h = y+d;
+    int k = h+a
+    return k;
+}
+
+public class CalculatorAdvanced{
+
     /* This is a 
     multi-string comment,
     which checks
@@ -59,4 +69,5 @@ public class CloneT1C3{
         }
         return s; // Return statement
     }
+}
 }
